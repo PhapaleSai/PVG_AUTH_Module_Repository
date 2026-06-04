@@ -81,8 +81,8 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 # Allow React dev server and production nginx
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allowed all for easy localtunnel access
-    allow_credentials=False,  # MUST be False when allow_origins is '*'
+    allow_origin_regex="https?://.*",  # Allows any HTTP/HTTPS origin (like ngrok-free.dev) with credentials
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -118,6 +118,55 @@ def root():
     return {
         "message": "PVG College Auth API v2 is running — visit /docs for the interactive API docs"
     }
+
+
+@app.get("/me")
+def get_me_fallback(request: Request):
+    """
+    Root-level fallback for /me (without /api prefix).
+    Detects if the requester is a modern User or a legacy Student,
+    and returns a unified profile response.
+    """
+    from fastapi import HTTPException
+    from database import SessionLocal
+    from auth import get_current_user, get_current_student
+
+    auth_header = request.headers.get("Authorization")
+    if not auth_header or not auth_header.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Missing or invalid token")
+    token = auth_header.split(" ")[1]
+
+    db = SessionLocal()
+    try:
+        # 1. Try modern User verification
+        try:
+            user = get_current_user(token=token, db=db)
+            roles = [ur.role.role_name for ur in user.user_roles if ur.role]
+            primary_role = roles[0] if roles else "Guest"
+            return {
+                "user_id": user.user_id,
+                "email": user.email,
+                "username": user.username,
+                "full_name": user.full_name,
+                "role": primary_role,
+                "roles": roles,
+            }
+        except Exception:
+            # 2. Try legacy Student verification
+            try:
+                student = get_current_student(token=token, db=db)
+                return {
+                    "user_id": student.id,
+                    "email": student.email,
+                    "username": student.username,
+                    "full_name": student.name,
+                    "role": "Student",
+                    "roles": ["Student"],
+                }
+            except Exception:
+                raise HTTPException(status_code=401, detail="Could not validate credentials")
+    finally:
+        db.close()
 
 
 @app.get("/healthz", tags=["Observability"])
