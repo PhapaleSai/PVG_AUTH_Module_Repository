@@ -164,7 +164,9 @@ def get_me_fallback(request: Request):
                     "roles": ["Student"],
                 }
             except Exception:
-                raise HTTPException(status_code=401, detail="Could not validate credentials")
+                raise HTTPException(
+                    status_code=401, detail="Could not validate credentials"
+                )
     finally:
         db.close()
 
