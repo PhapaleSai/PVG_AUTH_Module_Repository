@@ -1,11 +1,10 @@
 import os
 from datetime import datetime, timedelta
 
-from jose import JWTError, jwt
-from pydantic import BaseModel
-
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.security import OAuth2PasswordRequestForm
+from jose import JWTError, jwt
+from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 import models
