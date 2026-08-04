@@ -12,10 +12,10 @@ To get started, clone this repository to your local machine:
 
 ```bash
 # Clone the repository
-git clone https://github.com/PhapaleSai/pvg-auth.git
+git clone https://github.com/PhapaleSai/PVG_AUTH_Module_Repository.git
 
 # Navigate into the project folder
-cd pvg-auth
+cd PVG_AUTH_Module_Repository
 ```
 
 ---
