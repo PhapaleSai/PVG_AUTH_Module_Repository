@@ -1,16 +1,16 @@
-from typing import List
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 import models
 import schemas
-from database import get_db
 from auth import oauth2_scheme
+from database import get_db
 
 router = APIRouter(prefix="/permissions", tags=["Permissions"])
 
 
-@router.get("", response_model=List[schemas.PermissionOut])
+@router.get("", response_model=list[schemas.PermissionOut])
 def get_permissions(db: Session = Depends(get_db)):
     """Get Permissions"""
     return db.query(models.Permission).all()

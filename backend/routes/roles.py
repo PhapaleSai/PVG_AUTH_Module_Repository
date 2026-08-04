@@ -1,16 +1,16 @@
-from typing import List
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 import models
 import schemas
-from database import get_db
 from auth import get_current_user
+from database import get_db
 
 router = APIRouter(prefix="/roles", tags=["Authorization"])
 
 
-@router.get("", response_model=List[schemas.RoleOut])
+@router.get("", response_model=list[schemas.RoleOut])
 def get_roles(db: Session = Depends(get_db)):
     """
     Return all available roles.
@@ -101,7 +101,7 @@ def assign_role(
 @router.put("/{role_id}/permissions")
 def update_role_permissions(
     role_id: int,
-    payload: List[str],
+    payload: list[str],
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
 ):

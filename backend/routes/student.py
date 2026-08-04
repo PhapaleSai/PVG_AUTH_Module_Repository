@@ -1,11 +1,11 @@
-from typing import List
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
+import models
 import schemas
 from auth import get_current_student
 from database import get_db
-import models
 
 router = APIRouter(prefix="/api", tags=["student"])
 
@@ -31,7 +31,7 @@ def signup(student: schemas.StudentCreate, db: Session = Depends(get_db)):
             raise HTTPException(status_code=400, detail="Email already registered")
         raise HTTPException(status_code=400, detail="Username already registered")
 
-    from auth import get_password_hash, create_access_token
+    from auth import create_access_token, get_password_hash
 
     new_student = models.Student(
         name=student.name,
@@ -99,7 +99,7 @@ def login(payload: LegacyLoginRequest, db: Session = Depends(get_db)):
         .first()
     )
 
-    from auth import verify_password, create_access_token
+    from auth import create_access_token, verify_password
 
     if not db_student or not verify_password(
         payload.password, db_student.password_hash
@@ -115,7 +115,7 @@ def get_me(current_student: models.Student = Depends(get_current_student)):
     return current_student
 
 
-@router.get("/students", response_model=List[schemas.StudentOut])
+@router.get("/students", response_model=list[schemas.StudentOut])
 def get_all_students(db: Session = Depends(get_db)):
     """Admin endpoint — returns all registered students."""
     return db.query(models.Student).all()

@@ -1,6 +1,6 @@
-from database import SessionLocal
 import models
 from auth import get_password_hash
+from database import SessionLocal
 
 
 def repair():

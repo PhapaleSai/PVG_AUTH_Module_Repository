@@ -1,19 +1,17 @@
 import os
 import uuid
 from datetime import datetime, timedelta
-from typing import Optional
 
-from jose import JWTError, jwt
-from passlib.context import CryptContext
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
-from sqlalchemy.orm import Session
-
-from database import get_db
-import models
-
+from jose import JWTError, jwt
+from passlib.context import CryptContext
 from slowapi import Limiter
 from slowapi.util import get_remote_address
+from sqlalchemy.orm import Session
+
+import models
+from database import get_db
 
 limiter = Limiter(key_func=get_remote_address)
 
@@ -36,7 +34,7 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
 
-def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
+def create_access_token(data: dict, expires_delta: timedelta | None = None) -> str:
     to_encode = data.copy()
     expire = datetime.utcnow() + (
         expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
@@ -52,7 +50,7 @@ def create_refresh_token(data: dict) -> str:
     return jwt.encode(to_encode, JWT_SECRET, algorithm=ALGORITHM)
 
 
-def verify_refresh_token(token: str) -> Optional[dict]:
+def verify_refresh_token(token: str) -> dict | None:
     try:
         payload = jwt.decode(
             token, JWT_SECRET, algorithms=[ALGORITHM], options={"verify_aud": False}

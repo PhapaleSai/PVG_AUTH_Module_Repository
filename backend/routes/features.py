@@ -1,16 +1,16 @@
-from typing import List
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 import models
 import schemas
-from database import get_db
 from auth import oauth2_scheme
+from database import get_db
 
 router = APIRouter(prefix="/features", tags=["Features"])
 
 
-@router.get("", response_model=List[schemas.FeatureOut])
+@router.get("", response_model=list[schemas.FeatureOut])
 def get_features(db: Session = Depends(get_db)):
     """Get Features"""
     return db.query(models.Feature).all()

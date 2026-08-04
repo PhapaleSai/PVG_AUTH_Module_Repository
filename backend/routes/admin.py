@@ -3,15 +3,15 @@ Admin-only API endpoints for the dashboard.
 Provides stats, user management, and audit info.
 """
 
-from typing import List, Optional
 from datetime import datetime, timedelta
+
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session
 from pydantic import BaseModel
+from sqlalchemy.orm import Session
 
 import models
-from database import get_db
 from auth import get_current_user
+from database import get_db
 
 router = APIRouter(prefix="/admin", tags=["Admin Dashboard"])
 
@@ -24,17 +24,17 @@ class DashboardStats(BaseModel):
     total_roles: int
     active_sessions: int
     total_tokens: int
-    user_growth: List[dict] = []
-    login_growth: List[dict] = []
+    user_growth: list[dict] = []
+    login_growth: list[dict] = []
 
 
 class UserDetail(BaseModel):
     user_id: int
     username: str
     email: str
-    role: Optional[str] = None
-    status: Optional[bool] = True
-    created_at: Optional[datetime] = None
+    role: str | None = None
+    status: bool | None = True
+    created_at: datetime | None = None
 
     class Config:
         from_attributes = True
@@ -43,8 +43,8 @@ class UserDetail(BaseModel):
 class RoleDetail(BaseModel):
     role_id: int
     role_name: str
-    description: Optional[str] = None
-    permissions: List[str] = []
+    description: str | None = None
+    permissions: list[str] = []
     user_count: int = 0
 
     class Config:
@@ -56,7 +56,7 @@ class AuditEntry(BaseModel):
     user: str
     detail: str
     timestamp: str
-    ip: Optional[str] = None
+    ip: str | None = None
 
 
 # ── Helper ───────────────────────────────────────────────────────────────────
@@ -100,7 +100,7 @@ def get_dashboard_stats(
     )
 
 
-@router.get("/users", response_model=List[UserDetail])
+@router.get("/users", response_model=list[UserDetail])
 def get_all_users_admin(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
@@ -141,7 +141,7 @@ def get_user_detail_admin(
     )
 
 
-@router.get("/roles", response_model=List[RoleDetail])
+@router.get("/roles", response_model=list[RoleDetail])
 def get_all_roles_admin(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
@@ -167,7 +167,7 @@ def get_all_roles_admin(
     return result
 
 
-@router.get("/audit", response_model=List[AuditEntry])
+@router.get("/audit", response_model=list[AuditEntry])
 def get_audit_log(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),

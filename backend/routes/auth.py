@@ -1,23 +1,28 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Request
-from fastapi.security import OAuth2PasswordRequestForm
-from sqlalchemy.orm import Session
+import os
 from datetime import datetime, timedelta
 
-from database import get_db
+from jose import JWTError, jwt
+from pydantic import BaseModel
+
+from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi.security import OAuth2PasswordRequestForm
+from sqlalchemy.orm import Session
+
 import models
 import schemas
 from auth import (
-    get_password_hash,
-    verify_password,
-    create_access_token,
-    create_refresh_token,
-    verify_refresh_token,
     ACCESS_TOKEN_EXPIRE_MINUTES,
     REFRESH_TOKEN_EXPIRE_DAYS,
+    create_access_token,
+    create_refresh_token,
     get_current_user,
-    oauth2_scheme,
+    get_password_hash,
     limiter,
+    oauth2_scheme,
+    verify_password,
+    verify_refresh_token,
 )
+from database import get_db
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
@@ -413,11 +418,6 @@ def logout(
         db.commit()
 
     return {"message": f"User '{current_user.email}' logged out successfully"}
-
-
-from pydantic import BaseModel  # noqa: E402
-from jose import jwt, JWTError  # noqa: E402
-import os  # noqa: E402
 
 
 class VerifyTokenRequest(BaseModel):

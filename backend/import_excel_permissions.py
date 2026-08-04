@@ -1,6 +1,7 @@
 import pandas as pd
-from database import SessionLocal
+
 import models
+from database import SessionLocal
 
 
 def normalize_role_name(name):

@@ -1,26 +1,28 @@
-import uuid
-import os
 import logging
+import os
 import time
-from pythonjsonlogger import jsonlogger
+import uuid
+
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from pythonjsonlogger import jsonlogger
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
-from database import engine
+
 import models
-from routes import (
-    auth,
-    student,
-    roles,
-    users,
-    admin,
-    modules,
-    features,
-    permissions,
-    logs,
-)
 from auth import limiter
+from database import engine
+from routes import (
+    admin,
+    auth,
+    features,
+    logs,
+    modules,
+    permissions,
+    roles,
+    student,
+    users,
+)
 
 # ── Sentry (optional — only active when SENTRY_DSN is set in env) ─────────────
 _sentry_dsn = os.getenv("SENTRY_DSN")
@@ -128,8 +130,9 @@ def get_me_fallback(request: Request):
     and returns a unified profile response.
     """
     from fastapi import HTTPException
+
+    from auth import get_current_student, get_current_user
     from database import SessionLocal
-    from auth import get_current_user, get_current_student
 
     auth_header = request.headers.get("Authorization")
     if not auth_header or not auth_header.startswith("Bearer "):

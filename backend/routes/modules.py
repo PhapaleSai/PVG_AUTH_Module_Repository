@@ -1,16 +1,16 @@
-from typing import List
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 import models
 import schemas
-from database import get_db
 from auth import oauth2_scheme
+from database import get_db
 
 router = APIRouter(prefix="/modules", tags=["Modules"])
 
 
-@router.get("", response_model=List[schemas.ModuleOut])
+@router.get("", response_model=list[schemas.ModuleOut])
 def get_modules(db: Session = Depends(get_db)):
     """Get Modules"""
     return db.query(models.Module).all()

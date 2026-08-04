@@ -1,4 +1,5 @@
 import random
+
 import bcrypt
 import psycopg2
 from faker import Faker
@@ -241,8 +242,8 @@ def run():
 
     # ── 8. REFRESH_TOKENS ───────────────────────────────────────────────────────
     print("[8] Inserting refresh tokens...")
-    import secrets
     import datetime
+    import secrets
 
     for uid in random.sample(user_ids, k=30):
         token = secrets.token_hex(64)

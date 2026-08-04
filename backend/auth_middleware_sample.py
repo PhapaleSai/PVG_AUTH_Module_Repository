@@ -32,7 +32,6 @@ Environment variables required in YOUR module's .env
 from __future__ import annotations
 
 import os
-from typing import Optional
 
 import httpx
 from fastapi import Depends, HTTPException, status
@@ -59,8 +58,8 @@ class TokenPayload(BaseModel):
     user_id: int
     username: str
     full_name: str
-    exp: Optional[int] = None
-    jti: Optional[str] = None
+    exp: int | None = None
+    jti: str | None = None
 
 
 # ── Strategy A — Remote verify (recommended) ──────────────────────────────────

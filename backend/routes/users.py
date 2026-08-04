@@ -1,11 +1,11 @@
-from typing import List
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 import models
 import schemas
-from database import get_db
 from auth import get_current_user
+from database import get_db
 
 router = APIRouter(prefix="/users", tags=["User Management"])
 
@@ -32,14 +32,13 @@ def get_user_me(current_user: models.User = Depends(get_current_user)):
     }
 
 
-from typing import Optional  # noqa: E402
 
 
-@router.get("", response_model=List[schemas.UserOut])
+@router.get("", response_model=list[schemas.UserOut])
 def get_all_users(
-    role: Optional[str] = None,
-    department: Optional[str] = None,
-    email: Optional[str] = None,
+    role: str | None = None,
+    department: str | None = None,
+    email: str | None = None,
     db: Session = Depends(get_db),
 ):
     """
