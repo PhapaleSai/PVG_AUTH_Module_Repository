@@ -27,6 +27,7 @@ The system requires **PostgreSQL**. Ensure it is installed and the `psql` comman
 ### **Creating and Seeding the Database**
 To avoid manual table creation, we provide a full database dump (`database_scripts/pvg_auth_full_dump.sql`) containing the complete schema and seed data (modules, roles, users, students).
 
+### **Method 1: Using Command Line (psql)**
 1. Open your command prompt/terminal and log into PostgreSQL:
    ```bash
    psql -U postgres
@@ -44,6 +45,14 @@ To avoid manual table creation, we provide a full database dump (`database_scrip
    ```bash
    psql -U postgres -d pvg_auth -f database_scripts/pvg_auth_full_dump.sql
    ```
+
+### **Method 2: Using pgAdmin (GUI)**
+1. Open pgAdmin and connect to your local PostgreSQL server.
+2. Right-click on **Databases** -> **Create** -> **Database...**
+3. Name it `pvg_auth` and click **Save**.
+4. Right-click on the newly created `pvg_auth` database and select **Restore...**
+5. In the **Filename** field, click the folder icon and select `pvg_auth_full_dump.sql` from the `database_scripts` folder inside the project.
+6. Click **Restore**.
 
 ---
 
