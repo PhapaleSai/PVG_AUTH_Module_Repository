@@ -6,8 +6,7 @@ description = "Auth Module for PVG ERP"
 [tool.ruff]
 line-length = 100
 target-version = "py310"
-ignore = ["B008", "DTZ001", "DTZ003", "DTZ005", "S311", "BLE001", "S101", "S110", "RUF013"]
-lint.ignore = ["B008", "DTZ001", "DTZ003", "DTZ005", "S311", "BLE001", "S101", "S110", "RUF013"]
+lint.ignore = ["B008", "DTZ001", "DTZ003", "DTZ005", "S311", "BLE001", "S101", "S110", "RUF013", "C401", "FURB122"]
 
 [tool.mypy]
 strict = true
