@@ -1,4 +1,3 @@
-
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
@@ -30,8 +29,6 @@ def get_user_me(current_user: models.User = Depends(get_current_user)):
         "created_at": current_user.created_at,
         "updated_at": current_user.updated_at,
     }
-
-
 
 
 @router.get("", response_model=list[schemas.UserOut])
